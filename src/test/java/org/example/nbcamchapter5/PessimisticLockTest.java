@@ -56,6 +56,12 @@ class PessimisticLockTest {
 
         executor.shutdown();
 
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
+
         // 결과 검증
         Account result = accountRepository.findById(account.getId()).orElseThrow();
         System.out.println("최종 잔액: " + result.getBalance());

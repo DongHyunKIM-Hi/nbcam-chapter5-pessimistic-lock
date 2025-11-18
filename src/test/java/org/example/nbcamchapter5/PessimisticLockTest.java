@@ -2,6 +2,7 @@ package org.example.nbcamchapter5;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.example.nbcamchapter5.common.entity.Account;
 import org.example.nbcamchapter5.domain.account.repository.AccountRepository;
 import org.example.nbcamchapter5.domain.account.service.AccountService;
@@ -61,7 +62,7 @@ class PessimisticLockTest {
     }
 
     @Test
-    void 동시에_두_트랜잭션_출금_테스트_락없음() {
+    void 동시에_두_트랜잭션_출금_테스트_락없음() throws InterruptedException {
         // 초기 데이터 세팅
         Account account = accountRepository.save(new Account(100));
 
@@ -96,6 +97,13 @@ class PessimisticLockTest {
         executor.submit(task3);
 
         executor.shutdown();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
 
         Account result = accountRepository.findById(account.getId()).orElseThrow();
         System.out.println("최종 잔액: " + result.getBalance());

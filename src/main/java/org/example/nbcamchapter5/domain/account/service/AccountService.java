@@ -26,6 +26,12 @@ public class AccountService {
 
         Account account = accountRepository.findById(accountId).orElseThrow(); // 🔒 락 획득
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         account.decrease(amount);
         System.out.println(Thread.currentThread().getName() + " → 출금 완료 (잔액: " + account.getBalance() + ")");
     }
